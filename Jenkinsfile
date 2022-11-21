@@ -21,6 +21,7 @@ pipeline {
                 sh '''#!/bin/bash
                 echo shell commands here
                 chmod +x mvnw
+                gradle +x mvnw
                 '''
             }
         }
