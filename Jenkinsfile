@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Carga script') {
             steps {
-                if (${TEST_CHOICE} == 'maven') {
+                if (params.TEST_CHOICE == "maven") {
                     code = load 'maven.groovy'
                 } else {
                     code = load 'gradle.groovy'
