@@ -1,8 +1,8 @@
 def Compilacion() {
-  sh './gradle build'
+  sh './gradlew build'
 }
 def Test(){
-  sh './gradle test'
+  sh './gradlew test'
 }
 
 return this
