@@ -1,5 +1,4 @@
 def Compilacion() {
-  chmod +x mvnw
   sh './mvnw clean compile -e'
 }
 
