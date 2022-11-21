@@ -1,12 +1,20 @@
 def code
-
-  stage('Load') {
-    code = load 'example.groovy'
-  }
-
-  stage('Execute') {
-    code.example1()
-  }
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    code = load 'maven.groovy'
+                }
+            }
+        }
+        stage('Compilación') {
+            steps {
+                script {
+                    code.Compilacion()
+                }
+            }
+        }
+    }
 }
-
-code.example2()
