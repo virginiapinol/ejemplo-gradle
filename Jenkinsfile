@@ -6,8 +6,9 @@ pipeline {
             steps {
                 checkout scm
             }
-            steps 
-            {
+        }
+        stage('chmod'){
+            steps {
                 sh '''#!/bin/bash
                 echo shell commands here
                 chmod +x mvnw
