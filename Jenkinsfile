@@ -1,10 +1,5 @@
 def code
 
-node('java-agent') {
-  stage('Checkout') {
-    checkout scm
-  }
-
   stage('Load') {
     code = load 'example.groovy'
   }
