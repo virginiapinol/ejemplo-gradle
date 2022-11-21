@@ -39,14 +39,17 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "equipo5"        
     }
     stages {
+        stage('Load') {
+            code = load 'maven.groovy'
+        }
         stage('Compilación') {
             steps {
-                sh './mvnw clean compile -e'
+                code.Compilacion()
             }
         }
         stage('Test') {
             steps {
-                sh './mvnw clean test -e'
+                code.Test()
             }
         }
         /*stage('Análisis Sonarqube') {

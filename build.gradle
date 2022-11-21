@@ -25,7 +25,7 @@ dependencies {
 }
 
 group = 'com.devopsusach2020'
-version = '0.0.1'
+version = '0.0.5'
 description = 'DevOpsUsach2020'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
