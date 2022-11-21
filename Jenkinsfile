@@ -25,10 +25,19 @@ pipeline {
             }
         }
         stage('Carga script') {
+            when {
+                expression { params.TEST_CHOICE == 'maven' }
+            }
             steps {
-                if (params.TEST_CHOICE == "maven") {
+                script {
                     code = load 'maven.groovy'
-                } else {
+                }
+            }
+            when {
+                expression { params.TEST_CHOICE == 'gradle' }
+            }
+            steps {
+                script {
                     code = load 'gradle.groovy'
                 }
             }
