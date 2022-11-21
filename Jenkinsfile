@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                chmod '+x mvnw'
                 script {
-                    chmod '+x mvnw'
                     code = load 'maven.groovy'
                 }
             }
