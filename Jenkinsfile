@@ -21,14 +21,11 @@ pipeline {
                 sh '''#!/bin/bash
                 echo shell commands here
                 chmod +x mvnw
-                gradle +x mvnw
+                gradlew +x mvnw
                 '''
             }
         }
         stage('Carga script') {
-            environment {
-                herramienta = tool 'gradle'
-            }
             steps {
                 script {
                     code = load "./${params.TEST_CHOICE}.groovy"
