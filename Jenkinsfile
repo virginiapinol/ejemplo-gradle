@@ -25,6 +25,8 @@ def getBuildUser() {
   }
 }
 
+def code
+
 pipeline {
     agent any
     /*tools {
@@ -38,20 +40,19 @@ pipeline {
         NEXUS_REPOSITORY = "devops-usach-vpino"
         NEXUS_CREDENTIAL_ID = "equipo5"        
     }
-    stages {
-        stage('Load') {
-            code = load 'maven.groovy'
+    stage('Load') {
+        code = load 'maven.groovy'
+    }
+    stage('Compilación') {
+        steps {
+            code.Compilacion()
         }
-        stage('Compilación') {
-            steps {
-                code.Compilacion()
-            }
+    }
+    stage('Test') {
+        steps {
+            code.Test()
         }
-        stage('Test') {
-            steps {
-                code.Test()
-            }
-        }
+    }
         /*stage('Análisis Sonarqube') {
             environment {
                 scannerHome = tool 'SonarScanner'
@@ -100,7 +101,6 @@ pipeline {
                 }
             }
         }*/
-    }
     post{
         success{
             setBuildStatus("Build succeeded", "SUCCESS");
