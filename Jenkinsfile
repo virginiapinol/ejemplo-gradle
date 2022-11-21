@@ -46,5 +46,44 @@ pipeline {
                 }
             }
         }
+        stage('Análisis Sonarqube') {
+            environment {
+                scannerHome = tool 'SonarScanner'
+            }
+            steps {
+                 withSonarQubeEnv('sonar') {
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo_maven -Dsonar.host.url=https://76616267025f.ngrok.io -Dsonar.login=squ_6c8cafa0da0ac1956dc6a6f29d83e7d01856b654 -Dsonar.target=sonar.java.binaries'
+                }
+            }
+            
+        }
+        stage("Comprobación Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        } 
+        stage ('Publish Nexus'){
+			when {
+				branch "main"
+			}
+            steps{
+                script {
+                    pom = readMavenPom file: "pom.xml";
+                    //filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    //echo "*** aqui : ${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    //def file = ${pom.artifactId}-${pom.version}.${pom.packaging}
+                    echo "*** aqui : ;"//${pom.artifactId} ${pom.version} ${pom.packaging}"
+                    artifactPath = "./build/${pom.artifactId}-${pom.version}.${pom.packaging}";//filesByGlob[0].path;
+                    artifactExists = fileExists artifactPath;
+                    if(artifactExists) {
+                        echo "Artifact exists: ${artifactPath}";
+                         nexusPublisher nexusInstanceId: 'Nexus-1', nexusRepositoryId: 'devops-usach-vpino', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: "${artifactPath}"]], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: pom.version]]]
+                    } else {
+                        echo "Artifact does not exist: ${artifactPath}";
+                    }
+                }
+            }
+        }
+    }
     }
 }
