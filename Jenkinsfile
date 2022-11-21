@@ -1,4 +1,25 @@
 def code
+
+def getBuildUser() {
+  def userCause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
+  def upstreamCause = currentBuild.rawBuild.getCause(Cause.UpstreamCause)
+
+  if (userCause) {
+    return userCause.getUserId()
+  } else if (upstreamCause) {
+    def upstreamJob = Jenkins.getInstance().getItemByFullName(upstreamCause.getUpstreamProject(), hudson.model.Job.class)
+    if (upstreamJob) {
+      def upstreamBuild = upstreamJob.getBuildByNumber(upstreamCause.getUpstreamBuild())
+      if (upstreamBuild) {
+        def realUpstreamCause = upstreamBuild.getCause(Cause.UserIdCause)
+        if (realUpstreamCause) {
+          return realUpstreamCause.getUserId()
+        }
+      }
+    }
+  }
+}
+
 pipeline {
     agent any
 
@@ -84,5 +105,30 @@ pipeline {
                 }
             }
         }
+    }
+post{
+        success{
+            setBuildStatus("Build succeeded", "SUCCESS");
+            script{
+                BUILD_USER = getBuildUser()
+            }
+
+            slackSend channel:'@Virginia Pino ',
+                    color:COLOR_MAP[currentBuild.currentResult],
+                    message: "*${currentBuild.currentResult}:* ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}"
+
+        }
+
+        failure {
+            setBuildStatus("Build failed", "FAILURE");
+            script{
+                BUILD_USER = getBuildUser()
+            }
+
+            slackSend channel:'#@Virginia Pino',
+                    color:COLOR_MAP[currentBuild.currentResult],
+                    message: "*${currentBuild.currentResult}:* ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}"
+
+        } 
     }
 }
