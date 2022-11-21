@@ -7,7 +7,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('chmod'){
+        stage('Agregando permisos'){
             steps {
                 sh '''#!/bin/bash
                 echo shell commands here
@@ -15,7 +15,7 @@ pipeline {
                 '''
             }
         }
-        stage('Build') {
+        stage('Carga script') {
             steps {
                 script {
                     code = load 'maven.groovy'
@@ -26,6 +26,13 @@ pipeline {
             steps {
                 script {
                     code.Compilacion()
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    code.Test()
                 }
             }
         }
