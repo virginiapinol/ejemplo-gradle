@@ -26,6 +26,9 @@ pipeline {
             }
         }
         stage('Carga script') {
+            environment {
+                herramienta = tool 'gradle'
+            }
             steps {
                 script {
                     code = load "./${params.TEST_CHOICE}.groovy"
