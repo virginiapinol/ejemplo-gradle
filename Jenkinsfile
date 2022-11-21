@@ -6,6 +6,13 @@ pipeline {
             steps {
                 checkout scm
             }
+            steps 
+            {
+                sh '''#!/bin/bash
+                echo shell commands here
+                chmod +x mvnw
+                '''
+            }
         }
         stage('Build') {
             steps {
