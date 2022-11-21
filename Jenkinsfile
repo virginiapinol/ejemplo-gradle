@@ -67,7 +67,7 @@ pipeline {
                 }
             }
         }
-        stage('Análisis Sonarqube') {
+        /*stage('Análisis Sonarqube') {
             environment {
                 scannerHome = tool 'SonarScanner'
             }
@@ -82,7 +82,7 @@ pipeline {
             steps {
                 waitForQualityGate abortPipeline: true
             }
-        } 
+        } */
         stage ('Publish Nexus'){
 			when {
 				branch "main"
