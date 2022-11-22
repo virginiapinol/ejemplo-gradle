@@ -120,7 +120,6 @@ post{
 
             slackSend channel:'#devops-equipo5',
                 color:COLOR_MAP[currentBuild.currentResult],
-                BUILD_USER = getBuildUser()
                 message: "*${currentBuild.currentResult}:* ${BUILD_USER} ${env.JOB_NAME} build ${env.BUILD_NUMBER}  Ejecución exitosa"
 
         }
