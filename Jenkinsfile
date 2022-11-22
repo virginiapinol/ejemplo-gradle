@@ -5,26 +5,6 @@ def COLOR_MAP =[
     'FAILURE': 'danger'
 ]
 
-def getBuildUser() {
-  def userCause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
-  def upstreamCause = currentBuild.rawBuild.getCause(Cause.UpstreamCause)
-
-  if (userCause) {
-    return userCause.getUserId()
-  } else if (upstreamCause) {
-    def upstreamJob = Jenkins.getInstance().getItemByFullName(upstreamCause.getUpstreamProject(), hudson.model.Job.class)
-    if (upstreamJob) {
-      def upstreamBuild = upstreamJob.getBuildByNumber(upstreamCause.getUpstreamBuild())
-      if (upstreamBuild) {
-        def realUpstreamCause = upstreamBuild.getCause(Cause.UserIdCause)
-        if (realUpstreamCause) {
-          return realUpstreamCause.getUserId()
-        }
-      }
-    }
-  }
-}
-
 pipeline {
     agent any
 
@@ -122,9 +102,6 @@ pipeline {
 post{
         success{
             setBuildStatus("Build succeeded", "SUCCESS");
-            script{
-                BUILD_USER = getBuildUser()
-            }
 
             slackSend channel:'#devops-equipo5',
                 color:COLOR_MAP[currentBuild.currentResult],
@@ -134,13 +111,10 @@ post{
 
         failure {
             setBuildStatus("Build failed", "FAILURE");
-            script{
-                BUILD_USER = getBuildUser()
-            }
 
             slackSend channel:'#devops-equipo5',
                     color:COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* ${BUILD_USER} ${env.JOB_NAME} Ejecución fallida en stage: build ${env.BUILD_NUMBER}"
+                    message: "*${currentBuild.currentResult}:* ${env.GIT_AUTHOR} ${env.JOB_NAME} Ejecución fallida en stage: build ${env.BUILD_NUMBER}"
 
         } 
     }
