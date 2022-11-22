@@ -119,8 +119,9 @@ post{
             }
 
             slackSend channel:'#devops-equipo5',
-                    color:COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}"
+                color:COLOR_MAP[currentBuild.currentResult],
+                BUILD_USER = getBuildUser()
+                message: "*${currentBuild.currentResult}:* ${BUILD_USER} ${env.JOB_NAME} build ${env.BUILD_NUMBER}  Ejecución exitosa"
 
         }
 
@@ -132,7 +133,7 @@ post{
 
             slackSend channel:'#devops-equipo5',
                     color:COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}"
+                    message: "*${currentBuild.currentResult}:* ${BUILD_USER} ${env.JOB_NAME} Ejecución fallida en stage: build ${env.BUILD_NUMBER}"
 
         } 
     }
