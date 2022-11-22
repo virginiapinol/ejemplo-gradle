@@ -51,6 +51,14 @@ pipeline {
                 '''
             }
         }
+        stage('get_commit_details') {
+            steps {
+                script {
+                    env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
+                    env.GIT_AUTHOR = sh (script: 'git log -1 --pretty=%cn ${GIT_COMMIT}', returnStdout: true).trim()
+                }
+            }
+        }
         stage('Carga script') {
             steps {
                 script {
@@ -58,7 +66,7 @@ pipeline {
                 }
             }
         }
-        stage('Compilación') {
+        /*stage('Compilación') {
             steps {
                 script {
                     code.Compilacion()
@@ -71,7 +79,7 @@ pipeline {
                     code.Test()
                 }
             }
-        }
+        }*/
         /*stage('Análisis Sonarqube') {
             environment {
                 scannerHome = tool 'SonarScanner'
@@ -120,7 +128,7 @@ post{
 
             slackSend channel:'#devops-equipo5',
                 color:COLOR_MAP[currentBuild.currentResult],
-                message: "*${currentBuild.currentResult}:* ${BUILD_USER} ${env.JOB_NAME} build ${env.BUILD_NUMBER}  Ejecución exitosa"
+                message: "*${currentBuild.currentResult}:* ${env.GIT_AUTHOR} ${env.JOB_NAME} build ${env.BUILD_NUMBER}  Ejecución exitosa"
 
         }
 
