@@ -1,5 +1,10 @@
 def code
 
+def COLOR_MAP =[
+    'SUCCESS': 'good',
+    'FAILURE': 'danger'
+]
+
 def getBuildUser() {
   def userCause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
   def upstreamCause = currentBuild.rawBuild.getCause(Cause.UpstreamCause)
